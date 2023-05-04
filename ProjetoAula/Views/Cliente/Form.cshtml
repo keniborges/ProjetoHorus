@@ -1,0 +1,57 @@
+﻿@model ClienteModel
+
+@{
+	var estados = ViewBag.Estados;
+}
+
+<form class="row g-3" asp-action="Form" asp-controller="Cliente">
+	<div class="col-sm-6">
+		<label class="form-label" asp-for="NomeFantasia"></label>
+		<input type="text" class="form-control" asp-for="NomeFantasia">
+	</div>
+	<div class="col-sm-6">
+		<label class="form-label" asp-for="RazaoSocial"></label>
+		<input type="text" class="form-control" asp-for="RazaoSocial">
+	</div>
+
+	<div class="col-sm-4">
+		<label class="form-label" asp-for="InscricaoFederal"></label>
+		<input type="text" class="form-control" asp-for="InscricaoFederal">
+	</div>
+	<div class="col-sm-4">
+		<label class="form-label" asp-for="InscricaoEstadual"></label>
+		<input type="text" class="form-control" asp-for="InscricaoEstadual">
+	</div>
+	<div class="col-sm-4">
+		<label class="form-label" asp-for="Tributacao"></label>
+		<select asp-for="Tributacao" class="form-control" asp-items="Html.GetEnumSelectList<TributacaoEnum>()"></select>
+	</div>
+
+	<div class="col-sm-4">
+		<label class="form-label" asp-for="Endereco.Rua"></label>
+		<input type="text" class="form-control" asp-for="Endereco.Rua">
+	</div>
+	<div class="col-sm-4">
+		<label class="form-label" asp-for="Endereco.Bairro"></label>
+		<input type="text" class="form-control" asp-for="Endereco.Bairro">
+	</div>
+	<div class="col-sm-4">
+		<label class="form-label" asp-for="Endereco.Cep"></label>
+		<input type="text" class="form-control" asp-for="Endereco.Cep">
+	</div>
+
+	<div class="col-sm-6">
+		<label class="form-label" asp-for="Endereco.Estado"></label>
+		<select class="form-control" asp-for="Endereco.Estado" asp-items="estados"></select>
+	</div>
+	<div class="col-sm-6">
+		<label class="form-label" asp-for="Endereco.Cidade"></label>
+		<input type="text" class="form-control" asp-for="Endereco.Cidade">
+	</div>
+
+
+
+	<div class="col-auto">
+		<button type="submit" class="btn btn-primary mb-3">Salvar</button>
+	</div>
+</form>
