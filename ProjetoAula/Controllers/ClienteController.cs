@@ -46,6 +46,17 @@ namespace ProjetoAula.Controllers
 			return response;
 		}
 
+		[HttpGet]
+		public async Task<JsonResult> PegarCidades(long estadoId)
+		{
+			var options = new RestClientOptions("https://servicodados.ibge.gov.br/");
+			var client = new RestClient(options);
+			var request = new RestRequest($"api/v1/localidades/estados/{estadoId}/municipios", Method.Get);
+			var cidades = await client.GetAsync<List<CidadeModel>>(request);
+			return Json(cidades);
+
+		}
+
 
 	}
 }

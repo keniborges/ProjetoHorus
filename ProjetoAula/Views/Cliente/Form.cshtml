@@ -46,7 +46,7 @@
 	</div>
 	<div class="col-sm-6">
 		<label class="form-label" asp-for="Endereco.Cidade"></label>
-		<input type="text" class="form-control" asp-for="Endereco.Cidade">
+		<select class="form-control" asp-for="Endereco.Cidade"></select>
 	</div>
 
 
@@ -61,26 +61,23 @@
 	$(function(){
 	
 		$("#Endereco_Estado").on('change', function(){
-
 			var valor = $("#Endereco_Estado option:selected").val();
-
+			$("#Endereco_Cidade option").remove();
 			$.ajax({
 				'type' : 'GET',
 				'url' : '/cliente/PegarCidades',
 				'data' : {'estadoId' : valor }, 
 				'erro' : function(){ alert('caiu a casa')},
 				'success' : function(result){
-					$(result).each(function(index, item){}
+					$(result).each(function(index, item){
 						$("#Endereco_Cidade").append($('<option>', {
 							value: item.id,
 							text: item.nome
 						}));					
-					);					
+					});			
 				}			
 			});
-		})
-
-	
-	})
+		});	
+	});
 
 </script>
