@@ -60,7 +60,7 @@ namespace ProjetoAula.Migrations
 
                     b.HasIndex("EnderecoId");
 
-                    b.ToTable("Cliente");
+                    b.ToTable("Cliente", (string)null);
                 });
 
             modelBuilder.Entity("ProjetoAula.Entidades.Endereco", b =>
@@ -88,7 +88,7 @@ namespace ProjetoAula.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Endereco");
+                    b.ToTable("Endereco", (string)null);
                 });
 
             modelBuilder.Entity("ProjetoAula.Entidades.Cliente", b =>

@@ -11,8 +11,8 @@ using ProjetoAula.Contexts;
 namespace ProjetoAula.Migrations
 {
     [DbContext(typeof(HorusContext))]
-    [Migration("20230505234135_AjustesTabelas")]
-    partial class AjustesTabelas
+    [Migration("20230519224032_Cliente")]
+    partial class Cliente
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

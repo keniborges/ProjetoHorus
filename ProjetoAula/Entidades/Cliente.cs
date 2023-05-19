@@ -23,5 +23,6 @@ namespace ProjetoAula.Entidades
 		public TributacaoEnum Tributacao { get; set; }
 
 		public Endereco Endereco { get; set; }
+
 	}
 }

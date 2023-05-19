@@ -4,6 +4,7 @@ using RestSharp.Authenticators;
 using RestSharp;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ProjetoAula.Entidades;
 
 namespace ProjetoAula.Controllers
 {
@@ -34,6 +35,25 @@ namespace ProjetoAula.Controllers
 		[HttpPost]
 		public IActionResult Form(ClienteModel model)
 		{
+
+			var cliente = new Cliente()
+			{
+				Ativo = model.Ativo,
+				InscricaoEstadual = model.InscricaoEstadual,
+				InscricaoFederal = model.InscricaoFederal,
+				NomeFantasia = model.NomeFantasia,
+				RazaoSocial = model.RazaoSocial,
+				Tributacao = model.Tributacao,
+				Endereco = new Endereco()
+				{
+					Bairro = model.Endereco.Bairro,
+					Cep = model.Endereco.Cep,
+					Cidade = model.Endereco.Cidade,
+					Estado = model.Endereco.Estado,
+					Rua = model.Endereco.Rua
+				}
+			};
+
 			return View();
 		}
 

@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ProjetoAula.Migrations
 {
-    public partial class TabelaCliente : Migration
+    public partial class Cliente : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,11 +15,11 @@ namespace ProjetoAula.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Rua = table.Column<string>(type: "text", nullable: false),
-                    Bairro = table.Column<string>(type: "text", nullable: false),
-                    Estado = table.Column<string>(type: "text", nullable: false),
-                    Cidade = table.Column<string>(type: "text", nullable: false),
-                    Cep = table.Column<string>(type: "text", nullable: false)
+                    Rua = table.Column<string>(type: "text", nullable: true),
+                    Bairro = table.Column<string>(type: "text", nullable: true),
+                    Estado = table.Column<string>(type: "text", nullable: true),
+                    Cidade = table.Column<string>(type: "text", nullable: true),
+                    Cep = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -35,7 +35,7 @@ namespace ProjetoAula.Migrations
                     NomeFantasia = table.Column<string>(type: "character varying(120)", maxLength: 120, nullable: false),
                     RazaoSocial = table.Column<string>(type: "character varying(120)", maxLength: 120, nullable: false),
                     InscricaoFederal = table.Column<string>(type: "character varying(18)", maxLength: 18, nullable: false),
-                    InscricaoEstadual = table.Column<string>(type: "text", nullable: false),
+                    InscricaoEstadual = table.Column<string>(type: "text", nullable: true),
                     Ativo = table.Column<bool>(type: "boolean", nullable: false),
                     Tributacao = table.Column<int>(type: "integer", nullable: false),
                     EnderecoId = table.Column<long>(type: "bigint", nullable: false)
