@@ -6,6 +6,7 @@ using System.Threading;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ProjetoAula.Entidades;
 using ProjetoAula.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProjetoAula.Controllers
 {
@@ -27,7 +28,7 @@ namespace ProjetoAula.Controllers
 
 		public IActionResult Listar()
 		{
-			var clientes = _context.Cliente.ToList();
+			var clientes = _context.Cliente.Include(c => c.Endereco).ToList();
 			ViewBag.Clientes = clientes;
 			return View();
 		}
