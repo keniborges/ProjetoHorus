@@ -5,18 +5,30 @@ using RestSharp;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ProjetoAula.Entidades;
+using ProjetoAula.Contexts;
 
 namespace ProjetoAula.Controllers
 {
 	public class ClienteController : Controller
 	{
+
+		private HorusContext _context;
+
+		public ClienteController(HorusContext context) 
+		{
+			_context = context;
+		}
+
 		public IActionResult Index()
 		{
+		
 			return View();
 		}
 
 		public IActionResult Listar()
 		{
+			var clientes = _context.Cliente.ToList();
+			ViewBag.Clientes = clientes;
 			return View();
 		}
 
@@ -53,6 +65,8 @@ namespace ProjetoAula.Controllers
 					Rua = model.Endereco.Rua
 				}
 			};
+			_context.Cliente.Add(cliente);
+			_context.SaveChanges();
 
 			return View();
 		}
