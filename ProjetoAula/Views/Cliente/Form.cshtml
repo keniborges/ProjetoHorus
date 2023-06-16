@@ -7,7 +7,12 @@
 
 <form class="row g-3" asp-action="Form" asp-controller="Cliente" method="post">
 	<input type="hidden" asp-for="Id">
-	<input type="hidden" asp-for="Endereco.Id">
+	@{
+		if(Model.Id > 0)
+		{
+			<input type="hidden" asp-for="Endereco.Id">
+		}
+	}
 	<div class="col-sm-6">
 		<label class="form-label" asp-for="NomeFantasia"></label>
 		<input type="text" class="form-control" asp-for="NomeFantasia">
