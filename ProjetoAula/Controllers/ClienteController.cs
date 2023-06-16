@@ -1,27 +1,25 @@
-﻿using Aula.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using ProjetoAula.Models;
 using RestSharp.Authenticators;
 using RestSharp;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Aula.Entidades;
-using Aula.Context;
-using Microsoft.EntityFrameworkCore;
-using ProjetoAula.Contexts;
 using ProjetoAula.Entidades;
-using ProjetoAula.Models;
+using ProjetoAula.Contexts;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.WebEncoders.Testing;
 
-namespace Aula.Controllers
+namespace ProjetoAula.Controllers
 {
 	public class ClienteController : Controller
 	{
-		private readonly HorusContext _context;
 
-		public ClienteController(HorusContext context)
+		private HorusContext _context;
+
+		public ClienteController(HorusContext context) 
 		{
 			_context = context;
 		}
-
 
 		public IActionResult Index()
 		{
@@ -30,14 +28,12 @@ namespace Aula.Controllers
 
 		private void BuscarClientes()
 		{
-			var clientes = _context.Cliente.ToList();
+			var clientes = _context.Cliente.Include(c => c.Endereco).ToList();
 			ViewBag.Clientes = clientes;
 		}
 
-		public IActionResult Listagem()
+		public IActionResult Listar()
 		{
-			//var clientes = _context.Cliente.ToList();
-			//ViewBag.Clientes = clientes;
 			BuscarClientes();
 			return View();
 		}
@@ -172,6 +168,7 @@ namespace Aula.Controllers
 			BuscarClientes();
 			return View("Listagem");
 		}
+
 
 	}
 }
