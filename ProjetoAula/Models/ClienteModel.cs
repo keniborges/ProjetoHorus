@@ -6,6 +6,8 @@ namespace ProjetoAula.Models
 {
 	public class ClienteModel
 	{
+		public long Id { get; set; }
+
 		[Required]
 		[Display(Name = "Nome Fantasia")]
 		public string NomeFantasia { get; set; }

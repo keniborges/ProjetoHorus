@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Aula.Entidades;
 using Aula.Context;
 using Microsoft.EntityFrameworkCore;
+using ProjetoAula.Contexts;
+using ProjetoAula.Entidades;
+using ProjetoAula.Models;
 
 namespace Aula.Controllers
 {

@@ -2,6 +2,8 @@
 {
 	public class EnderecoModel
 	{
+
+		public long Id { get; set; }
 		public string Rua { get; set; }
 
 		public string Bairro { get; set; }	
