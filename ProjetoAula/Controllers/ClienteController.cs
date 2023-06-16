@@ -98,7 +98,7 @@ namespace ProjetoAula.Controllers
 					_context.Cliente.Update(cliente);
 				}
 				_context.SaveChanges();
-				return RedirectToAction("Listagem", "Cliente");
+				return RedirectToAction("Listar", "Cliente");
 
 			}
 			var estados = await BuscarEstados();
@@ -166,7 +166,7 @@ namespace ProjetoAula.Controllers
 			_context.SaveChanges();
 			//_context.Database.ExecuteSqlRaw($"delete from \"Cliente\" where \"Id\" = {Id}");
 			BuscarClientes();
-			return View("Listagem");
+			return View("Listar");
 		}
 
 
