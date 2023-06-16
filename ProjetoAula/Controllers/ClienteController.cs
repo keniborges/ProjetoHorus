@@ -1,75 +1,111 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ProjetoAula.Models;
+﻿using Aula.Models;
+using Microsoft.AspNetCore.Mvc;
 using RestSharp.Authenticators;
 using RestSharp;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ProjetoAula.Entidades;
-using ProjetoAula.Contexts;
+using Aula.Entidades;
+using Aula.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace ProjetoAula.Controllers
+namespace Aula.Controllers
 {
 	public class ClienteController : Controller
 	{
+		private readonly HorusContext _context;
 
-		private HorusContext _context;
-
-		public ClienteController(HorusContext context) 
+		public ClienteController(HorusContext context)
 		{
 			_context = context;
 		}
 
+
 		public IActionResult Index()
 		{
-		
 			return View();
 		}
 
-		public IActionResult Listar()
+		private void BuscarClientes()
 		{
-			var clientes = _context.Cliente.Include(c => c.Endereco).ToList();
+			var clientes = _context.Cliente.ToList();
 			ViewBag.Clientes = clientes;
+		}
+
+		public IActionResult Listagem()
+		{
+			//var clientes = _context.Cliente.ToList();
+			//ViewBag.Clientes = clientes;
+			BuscarClientes();
 			return View();
 		}
 
-		[HttpGet]
 		public async Task<IActionResult> Form()
 		{
 			var model = new ClienteModel();
 			var estados = await BuscarEstados();
-			var estadosSelect = new List<SelectListItem>() { new SelectListItem() { Value = "", Text = "Selecione o estado" } };
+			var estadosSelect = new List<SelectListItem>() { new SelectListItem() { Text = "Escolha o Estado", Value = "" } };
 			foreach (var estado in estados.OrderBy(c => c.Nome))
-				estadosSelect.Add(new SelectListItem() { Value = estado.Id.ToString(), Text = estado.Nome });
+				estadosSelect.Add(new SelectListItem() { Text = estado.Nome, Value = estado.Id.ToString() });
 			ViewBag.Estados = estadosSelect;
 			return View(model);
 		}
 
-		[HttpPost]
-		public IActionResult Form(ClienteModel model)
+		private List<SelectListItem> EstadosSelectItem(List<EstadoModel> estados)
 		{
+			var estadosSelect = new List<SelectListItem>() { new SelectListItem() { Text = "Escolha o Estado", Value = "" } };
+			foreach (var estado in estados.OrderBy(c => c.Nome))
+				estadosSelect.Add(new SelectListItem() { Text = estado.Nome, Value = estado.Id.ToString() });
+			return estadosSelect;
+		}
 
-			var cliente = new Cliente()
+		private List<SelectListItem> CidadesSelectItem(List<CidadeModel> cidades)
+		{
+			var cidadesSelect = new List<SelectListItem>() { new SelectListItem() { Text = "Escolha o Estado", Value = "" } };
+			foreach (var cidade in cidades)
+				cidadesSelect.Add(new SelectListItem() { Text = cidade.Nome, Value = cidade.Id.ToString() });
+			return cidadesSelect;
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Form(ClienteModel model)
+		{
+			if (ModelState.IsValid)
 			{
-				Ativo = model.Ativo,
-				InscricaoEstadual = model.InscricaoEstadual,
-				InscricaoFederal = model.InscricaoFederal,
-				NomeFantasia = model.NomeFantasia,
-				RazaoSocial = model.RazaoSocial,
-				Tributacao = model.Tributacao,
-				Endereco = new Endereco()
+				var cliente = new Cliente()
 				{
-					Bairro = model.Endereco.Bairro,
-					Cep = model.Endereco.Cep,
-					Cidade = model.Endereco.Cidade,
-					Estado = model.Endereco.Estado,
-					Rua = model.Endereco.Rua
+					Id = model.Id,
+					Ativo = model.Ativo,
+					InscricaoEstadual = model.InscricaoEstadual,
+					InscricaoFederal = model.InscricaoFederal,
+					NomeFantasia = model.NomeFantasia,
+					RazaoSocial = model.RazaoSocial,
+					Tributacao = model.Tributacao,
+					Endereco = new Endereco()
+					{
+						Id = model.Endereco.Id,
+						Bairro = model.Endereco.Bairro,
+						Cep = model.Endereco.Cep,
+						Cidade = model.Endereco.Cidade,
+						Estado = model.Endereco.Estado,
+						Rua = model.Endereco.Rua
+					}
+				};
+				if (model.Id == 0)
+				{
+					_context.Cliente.Add(cliente);
 				}
-			};
-			_context.Cliente.Add(cliente);
-			_context.SaveChanges();
+				else
+				{
+					_context.Cliente.Update(cliente);
+				}
+				_context.SaveChanges();
+				return RedirectToAction("Listagem", "Cliente");
 
-			return View();
+			}
+			var estados = await BuscarEstados();
+			ViewBag.Estados = EstadosSelectItem(estados);
+			return View(model);
+
 		}
 
 		public async Task<List<EstadoModel>> BuscarEstados()
@@ -77,21 +113,62 @@ namespace ProjetoAula.Controllers
 			var options = new RestClientOptions("https://servicodados.ibge.gov.br/");
 			var client = new RestClient(options);
 			var request = new RestRequest("api/v1/localidades/estados");
-			var response = await client.GetAsync<List<EstadoModel>>(request);
-			return response;
+			return await client.GetAsync<List<EstadoModel>>(request);
 		}
 
-		[HttpGet]
-		public async Task<JsonResult> PegarCidades(long estadoId)
+		private async Task<List<CidadeModel>> BuscarCidades(long estadoId)
 		{
 			var options = new RestClientOptions("https://servicodados.ibge.gov.br/");
 			var client = new RestClient(options);
-			var request = new RestRequest($"api/v1/localidades/estados/{estadoId}/municipios", Method.Get);
+			RestRequest request = new RestRequest($"api/v1/localidades/estados/{estadoId}/municipios", Method.Get);
 			var cidades = await client.GetAsync<List<CidadeModel>>(request);
-			return Json(cidades);
-
+			return cidades.OrderBy(c => c.Nome).ToList();
 		}
 
+		public async Task<JsonResult> PegarCidades(long estadoId)
+		{
+			return Json(await BuscarCidades(estadoId));
+		}
+
+		public async Task<IActionResult> Editar(long Id)
+		{
+			var cliente = _context.Cliente.Include(c => c.Endereco).FirstOrDefault(c => c.Id == Id);
+			var model = new ClienteModel()
+			{
+				Id = cliente.Id,
+				Ativo = cliente.Ativo,
+				InscricaoFederal = cliente.InscricaoFederal,
+				InscricaoEstadual = cliente.InscricaoEstadual,
+				NomeFantasia = cliente.NomeFantasia,
+				RazaoSocial = cliente.RazaoSocial,
+				Tributacao = cliente.Tributacao,
+				Endereco = new EnderecoModel()
+				{
+					Id = cliente.Endereco.Id,
+					Bairro = cliente.Endereco.Bairro,
+					Cep = cliente.Endereco.Cep,
+					Estado = cliente.Endereco.Estado,
+					Cidade = cliente.Endereco.Cidade,
+					Rua = cliente.Endereco.Rua
+				}
+			};
+			var estados = await BuscarEstados();
+			var cidades = await BuscarCidades(Convert.ToInt16(cliente.Endereco.Estado));
+			ViewBag.Estados = EstadosSelectItem(estados);
+			ViewBag.Cidades = CidadesSelectItem(cidades);
+			return View("Form", model);
+		}
+
+		[HttpGet]
+		public IActionResult Excluir(long Id)
+		{
+			var cliente = _context.Cliente.FirstOrDefault(c => c.Id == Id);
+			_context.Cliente.Remove(cliente);
+			_context.SaveChanges();
+			//_context.Database.ExecuteSqlRaw($"delete from \"Cliente\" where \"Id\" = {Id}");
+			BuscarClientes();
+			return View("Listagem");
+		}
 
 	}
 }

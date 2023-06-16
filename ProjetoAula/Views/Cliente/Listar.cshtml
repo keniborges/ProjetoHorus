@@ -14,6 +14,7 @@
 			<th scope="col">Inscrição Federal</th>
 			<th scope="col">Rua</th>
 			<th scope="col">Bairro</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -26,6 +27,10 @@
 					<td>@cliente.InscricaoFederal</td>
 					<td>@cliente.Endereco.Rua</td>
 					<td>@cliente.Endereco.Bairro</td>
+                    <td>
+                        <a href="Editar?Id=@cliente.Id"><i class="bi bi-pencil-fill"></i></a>
+                        <a href="Excluir?Id=@cliente.Id"><i class="bi bi-trash3-fill"></i></a>
+                    </td>
 				</tr>
 			}
 		}
